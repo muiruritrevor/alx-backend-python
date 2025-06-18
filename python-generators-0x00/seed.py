@@ -100,10 +100,10 @@ def insert_data_from_csv(connection, csv_file):
             insert_query = """
             INSERT INTO user_data (user_id, name, email, age)
             VALUES (%s, %s, %s, %s)
+            ON DUPLICATE KEY UPDATE name=VALUES(name), email=VALUES(email), age=VALUES(age)
             """
-            values = (user_id, name, email, age)
-            cursor.execute(insert_query, values)
-            logger.info(f"Inserted user: {name}")
+            cursor.execute(insert_query, (user_id, name, email, age))
+            logger.info(f"Inserted/Updated user: {name}")
 
         connection.commit()
         logger.info("All data inserted successfully")
@@ -143,5 +143,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
