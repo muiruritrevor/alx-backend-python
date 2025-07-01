@@ -123,7 +123,8 @@ def insert_data_from_csv(connection, csv_file):
 def main():
     """Main function to orchestrate database setup and seeding."""
     try:
-        # Connect to MySQL
+        # Connect to MySQLconnection = connect_to_mysql()
+        
         connection = connect_to_mysql()
         
         # Create database and table
