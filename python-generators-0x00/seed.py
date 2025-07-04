@@ -1,3 +1,4 @@
+import os
 import mysql.connector
 import csv
 import uuid
@@ -15,8 +16,8 @@ logger = logging.getLogger(__name__)
 # Database configuration
 DB_CONFIG = {
     'host' : 'localhost',
-    'user' : 'root',
-    'password' : 'tking'
+    'user' : os.environ.get("DB_USER"),
+    'password' : os.environ.get("DB_PASS")
 }
 
 # CSV file path
