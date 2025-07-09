@@ -1,3 +1,7 @@
+"""
+Main script to orchestrate database setup and seeding.
+"""
+
 seed = __import__('seed')
 
 connection = seed.connect_to_mysql()
