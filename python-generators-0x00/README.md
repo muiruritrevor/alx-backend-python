@@ -35,7 +35,7 @@
     python seed.py
 
 
-# CSV Format
+## CSV Format
     name,email,age
     Alice Johnson,alice.johnson@example.com,28
 
