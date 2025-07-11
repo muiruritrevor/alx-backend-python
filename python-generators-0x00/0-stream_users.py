@@ -18,6 +18,8 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
+def stream_users():
+    pass
 
 def stream_users(connection):
     """
