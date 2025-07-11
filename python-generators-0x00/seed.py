@@ -23,6 +23,7 @@ DB_CONFIG = {
 # CSV file path
 csv_file = 'user_data.csv'
 
+
 def connect_to_mysql():
     """Connect to MySQL server and return connection object."""
     
