@@ -1,12 +1,18 @@
+"""
+Module to manage MySQL database operations for the ALX_prodev project.
+
+This script connects to a MySQL server, creates a database and table if they don't exist,
+and inserts data from a CSV file into the table, skipping duplicate entries.
+"""
+
 import os
 import mysql.connector
 import csv
 from uuid import uuid4
 import logging
-
 from mysql.connector import Error
- 
-# configure logging
+
+# Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s'
@@ -15,9 +21,9 @@ logger = logging.getLogger(__name__)
 
 # Database configuration
 DB_CONFIG = {
-    'host' : 'localhost',
-    'user' : os.environ.get("DB_USER"),
-    'password' : os.environ.get("DB_PASS")
+    'host': 'localhost',
+    'user': os.environ.get("DB_USER"),
+    'password': os.environ.get("DB_PASS")
 }
 
 # CSV file path
@@ -25,76 +31,108 @@ csv_file = 'user_data.csv'
 
 
 def connect_to_mysql():
-    """Connect to MySQL server and return connection object."""
-    
+    """
+    Establish a connection to the MySQL server.
+
+    Returns:
+        mysql.connector.connection.MySQLConnection: MySQL connection object.
+
+    Raises:
+        mysql.connector.Error: If connection fails.
+    """
     try:
         connection = mysql.connector.connect(**DB_CONFIG)
-        logging.info("Successfully connected to MySQLServer")
+        logger.info("Successfully connected to MySQL server")
         return connection
     except Error as e:
-        logger.error(f"Error connecting to MySQL {e}")
+        logger.error(f"Error connecting to MySQL: {e}")
         raise
 
 
 def create_database(connection):
-    """Create ALX_prodev database if it does not exit."""
+    """
+    Create the 'ALX_prodev' database if it does not already exist.
 
+    Parameters:
+        connection (mysql.connector.connection.MySQLConnection): Connection to MySQL server.
+
+    Raises:
+        mysql.connector.Error: If database creation fails.
+    """
     try:
-        mycursor = connection.cursor()
-        mycursor.execute("CREATE DATABASE IF NOT EXISTs ALX_prodev")
-        logging.info("Database ALX_prodev created or already exists")
-
+        cursor = connection.cursor()
+        cursor.execute("CREATE DATABASE IF NOT EXISTS ALX_prodev")
+        logger.info("Database ALX_prodev created or already exists")
     except Error as e:
-        logging.error(f"Error creating database: {e}" )
+        logger.error(f"Error creating database: {e}")
         raise
-
     finally:
-        mycursor.close()
+        cursor.close()
 
 
 def connect_to_db():
-    """Connect directly to ALX_prodev database"""
+    """
+    Connect to the 'ALX_prodev' database.
 
+    Returns:
+        mysql.connector.connection.MySQLConnection | None: Connection object or None on failure.
+    """
     try:
         db_config = DB_CONFIG.copy()
         db_config["database"] = "ALX_prodev"
         connection = mysql.connector.connect(**db_config)
-        logging.info("Connected to ALX_prodev database")
+        logger.info("Connected to ALX_prodev database")
         return connection
-    
     except Error as e:
-        logging.ERROR(f"Error connecting to ALX_prodev database {e}")
+        logger.error(f"Error connecting to ALX_prodev database: {e}")
         return None
 
-    
 
 def create_table(connection):
-    """Create user_data table with specified schema"""
-    
+    """
+    Create the 'user_data' table if it doesn't exist.
+
+    Parameters:
+        connection (mysql.connector.connection.MySQLConnection): Connection to the ALX_prodev database.
+
+    Raises:
+        mysql.connector.Error: If table creation fails.
+    """
     create_table_query = """
     CREATE TABLE IF NOT EXISTS user_data (
         user_id VARCHAR(36) PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         email VARCHAR(255) NOT NULL UNIQUE,
-        age DECIMAL(5,2) NOT NULL,
+        age INT NOT NULL,
         INDEX idx_user_id (user_id)
     )
     """
     try:
-        with connection.cursor() as cursor:
-            cursor.execute(create_table_query)
-            connection.commit()
-            logger.info("Table user_data created or already exists")
+        cursor = connection.cursor()
+        cursor.execute(create_table_query)
+        connection.commit()
+        logger.info("Table user_data created or already exists")
     except Error as e:
         logger.error(f"Error creating table: {e}")
         raise
     finally:
-         cursor.close()
+        cursor.close()
 
 
 def insert_data(connection, data):
-    """Insert data from CSV into user_data table, skipping duplicates."""
+    """
+    Insert user data from a CSV file into the 'user_data' table.
 
+    Skips rows with duplicate email addresses using INSERT IGNORE.
+
+    Parameters:
+        connection (mysql.connector.connection.MySQLConnection): Connection to the ALX_prodev database.
+        data (str): Path to the CSV file.
+
+    Logs:
+        Number of rows inserted, and any errors encountered.
+    """
+    cursor = None
     try:
         with open(data, 'r', encoding='utf-8') as file:
             reader = csv.DictReader(file)
@@ -115,17 +153,16 @@ def insert_data(connection, data):
                     inserted += 1
 
             connection.commit()
-            logging.info(f"{inserted} rows inserted (duplicates skipped).")
+            logger.info(f"{inserted} rows inserted (duplicates skipped).")
 
     except Error as e:
-        logging.error(f"MySQL error: {e}")
+        logger.error(f"MySQL error: {e}")
     except FileNotFoundError:
-        logging.error("CSV file not found.")
+        logger.error("CSV file not found.")
     except KeyError as e:
-        logging.error(f"Missing column in CSV: {e}")
+        logger.error(f"Missing column in CSV: {e}")
     except Exception as e:
-        logging.error(f"Unexpected error: {e}")
+        logger.error(f"Unexpected error: {e}")
     finally:
         if cursor:
             cursor.close()
-
