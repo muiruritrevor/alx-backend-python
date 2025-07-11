@@ -19,7 +19,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def stream_rows(connection):
+def stream_users(connection):
     """
     Generator function that streams rows from the 'user_data' table one at a time.
 
@@ -52,7 +52,7 @@ if __name__ == "__main__":
     connection = seed.connect_to_db()
     if connection:
         try:
-            for row in islice(stream_rows(connection), 6):
+            for row in islice(stream_users(connection), 6):
                 print(row)
         except seed.Error as e:
             logger.error(f"Error in test: {e}")
