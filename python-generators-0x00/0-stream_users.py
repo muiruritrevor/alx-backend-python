@@ -18,8 +18,8 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-def stream_users():
-    pass
+# def stream_users():
+#    pass
 
 def stream_users(connection):
     """
@@ -30,7 +30,7 @@ def stream_users(connection):
 
     Yields:
         dict: A dictionary representing a single row from the 'user_data' table.
-
+    
     Raises:
         seed.Error: If an error occurs during query execution or iteration.
     """
