@@ -1,29 +1,8 @@
-"""
-Main script to orchestrate database setup and seeding.
+import sys
+processing = __import__('1-batch_processing')
 
-"""
-
-seed = __import__('seed')
-
-connection = seed.connect_to_mysql()
-
-if connection:
-    seed.create_database(connection)
-    connection.close()
-    print(f"connection successful")
-
-    connection = seed.connect_to_db()
-
-    if connection:
-        seed.create_table(connection)
-        seed.insert_data(connection, 'user_data.csv')
-        cursor = connection.cursor()
-        cursor.execute(f"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'ALX_prodev';")
-        result = cursor.fetchone()
-        if result:
-            print(f"Database ALX_prodev is present ")
-        cursor.execute(f"SELECT * FROM user_data LIMIT 5;")
-        rows = cursor.fetchall()
-        print(rows)
-        cursor.close()
-        
+##### print processed users in a batch of 50
+try:
+    processing.batch_processing(50)
+except BrokenPipeError:
+    sys.stderr.close()
