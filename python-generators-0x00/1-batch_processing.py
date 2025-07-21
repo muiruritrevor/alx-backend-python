@@ -27,8 +27,8 @@ def stream_users_in_batches(batch_size: int):
 
     cursor = connection.cursor(dictionary=True, buffered=True)
     try:
-        # Filter in SQL for efficiency (Loop 1: Fetch batches)
-        query = "SELECT * FROM user_data WHERE age > 25"
+        # Query to filter users over the age of 25 (Loop 1: Fetch batches)
+        query = "SELECT * FROM user_data"
         cursor.execute(query)
         while True:
             batch = cursor.fetchmany(size=batch_size)
@@ -52,8 +52,9 @@ def batch_processing(batch_size: int):
     try:
         # Loop 2: Iterate over batches
         for batch in stream_users_in_batches(batch_size):
+            process = [user for user in batch if user.get("age", 0) > 25]
             # Loop 3: Process rows in batch
-            for user in batch:
+            for user in process:
                 print(f"{user}")
             logger.info(f"Processed batch with {len(batch)} users over 25")
     except Exception as e:
@@ -61,5 +62,5 @@ def batch_processing(batch_size: int):
 
 # Run the process
 if __name__ == "__main__":
-    batch_size = 500
+    batch_size = 50
     batch_processing(batch_size)
