@@ -1,5 +1,5 @@
+import seed
 from seed import connect_to_db
-from mysql.connector import Error
 import logging
 
 # Configure logging to display time, log level, and message
@@ -34,7 +34,7 @@ def paginate_users(page_size, offset):
         rows = cursor.fetchall()
         return rows
 
-    except Error as e:
+    except seed.Error as e:
         logger.error(f"Error fetching rows: {e}")
         return []
 
