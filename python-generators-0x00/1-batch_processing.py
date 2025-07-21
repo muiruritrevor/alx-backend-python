@@ -1,5 +1,5 @@
+import seed
 from seed import connect_to_db
-from mysql.connector import Error
 import logging
 
 # Configure logging to display time, log level, and message
@@ -41,7 +41,7 @@ def stream_users_in_batches(batch_size: int):
             if not batch:
                 break  # Exit when no more records are available
             yield batch  # Return the current batch
-    except Error as e:
+    except seed.error as e:
         logger.error(f"Error streaming batch: {e}")
     finally:
         # Always close cursor and connection
