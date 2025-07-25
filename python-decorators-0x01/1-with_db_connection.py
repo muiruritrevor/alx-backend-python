@@ -5,13 +5,10 @@ def with_db_connection(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         connection = sqlite3.connect('users.db')
-        cursor = connection.cursor()
         try:
-            result = func(cursor, *args, **kwargs)
-            connection.commit()
+            result = func(connection, *args, **kwargs)
             return result
         except Exception as e:
-            connection.rollback()
             print(f"Error occurred: {e}")
         finally:
             connection.close()
@@ -19,7 +16,8 @@ def with_db_connection(func):
 
 
 @with_db_connection
-def get_user_by_id(cursor, user_id):
+def get_user_by_id(connection, user_id):
+    cursor = connection.cursor()
     cursor.execute("SELECT * FROM users WHERE id = ?", (user_id,))
     return cursor.fetchone()
 
