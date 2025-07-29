@@ -1,5 +1,7 @@
+import sqlite3
+
+
 def create_database(db_name):
-    import sqlite3
 
     # Connect to the SQLite database (or create it if it doesn't exist)
     conn = sqlite3.connect(f"{db_name}.db")
@@ -12,7 +14,9 @@ def create_database(db_name):
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
+            email TEXT NOT NULL UNIQUE,
             age INTEGER NOT NULL
+
         )
     ''')
     
@@ -24,7 +28,6 @@ def create_database(db_name):
 
 
 def insert_sample_data(db_name):
-    import sqlite3
 
     # Connect to the SQLite database
     conn = sqlite3.connect(f"{db_name}.db")
@@ -34,13 +37,13 @@ def insert_sample_data(db_name):
     
     # Insert sample data into the users table
     sample_data = [
-        ('Alice', 30),
-        ('Bob', 25),
-        ('Charlie', 35)
+        ('Alice', 'alice@doe.com',30),
+        ('Bob', 'bob@doe.com', 25),
+        ('Charlie', 'charlie@doe.com', 35)
     ]
     
     cursor.executemany('''
-        INSERT INTO users (name, age) VALUES (?, ?)
+        INSERT INTO users (name, email, age) VALUES (?, ?, ?)
     ''', sample_data)
     
     # Commit the changes and close the connection
