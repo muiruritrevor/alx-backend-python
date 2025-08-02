@@ -1,12 +1,22 @@
-import asnycio
 import sqlite3
 
-asycio def execute_query(self, query):
-        """Asynchronously execute a query on the database."""
-        async with DatabaseConnection() as conn:
-            cursor = conn.cursor()
-            cursor.execute(query)
-            conn.commit()
-            return cursor.fetchall()
-        # Return False to propagate exceptions, True to suppress them
-        return False
+# class ExecuteQuery(query):
+#     def __init__(self):
+#         self.connection = None
+#         self.query = query
+    
+#     def __enter__(self):
+#         self.connection = sqlite3.connect('users.db')
+#         cursor = self.connection.cursor()
+#         cursor.execute(self.query)
+#         self.connection.commit()
+#         print(cursor.fetchall())
+#         return self.connection
+    
+#     def __exit__(self, exc_type, exc_value, traceback):
+#         if self.connection:
+#             self.connection.close()
+#         # Return False to propagate exceptions, True to suppress them
+#         return False
+
+class ExecuteQuery
