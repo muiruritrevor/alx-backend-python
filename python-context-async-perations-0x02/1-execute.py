@@ -19,4 +19,5 @@ import sqlite3
 #         # Return False to propagate exceptions, True to suppress them
 #         return False
 
-class ExecuteQuery
+class ExecuteQuery:
+    pass
