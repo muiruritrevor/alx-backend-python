@@ -1,3 +1,10 @@
+import asyncio
+
+
+async def fetch_concurrently():
+    pass
+
+
 async def async_fetch_users(): 
     pass
     
