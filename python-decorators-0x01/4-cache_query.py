@@ -35,7 +35,7 @@ def cache_query(func):
         
         print("Executing query and caching result.")
         result = func(*args, **kwargs)
-        query_cache[key] = result
+        # query_cache[key] = result
         return result
     
     return wrapper
@@ -49,7 +49,9 @@ def fetch_users_with_cache(conn, query):
     return cursor.fetchall()
 
 # First call will cache the result
-users = fetch_users_with_cache(query="SELECT * FROM users")
+users = fetch_users_with_cache(query="SELECT id FROM users")
+print(users)
      
 # Second call will use the cached result
-users_again = fetch_users_with_cache(query="SELECT * FROM users")
+users_again = fetch_users_with_cache(query="SELECT id FROM users")
+print(users_again)
