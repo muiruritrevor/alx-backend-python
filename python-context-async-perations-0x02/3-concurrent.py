@@ -1,3 +1,5 @@
+# Aug 7
+
 import asyncio
 import aiosqlite
 
@@ -39,4 +41,6 @@ async def fetch_concurrently():
         print(user)
 
 # Run the concurrent fetch
-asyncio.run(fetch_concurrently())
+asyncio.run(fetch_concurrently()) 
+
+
