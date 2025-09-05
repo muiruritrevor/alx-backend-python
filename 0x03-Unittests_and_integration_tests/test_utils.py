@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # """Generic utilities for github org client.
 # """
-# import requests
+import requests
 # from functools import wraps
 # from typing import (
 #     Mapping,
@@ -40,11 +40,11 @@
 #     return nested_map
 
 
-# def get_json(url: str) -> Dict:
-#     """Get JSON from remote URL.
-#     """
-#     response = requests.get(url)
-#     return response.json()
+def get_json(url: str) -> dict:
+    """Get JSON from remote URL.
+    """
+    response = requests.get(url)
+    return response.json()
 
 
 # def memoize(fn: Callable) -> Callable:
@@ -124,3 +124,32 @@ class TestAccessNestedMap(unittest.TestCase):
 if __name__ == "__main__":
     unittest.main() 
 
+
+
+# Test 2. Mock HTTP calls
+
+
+from unittest.mock import patch, Mock
+
+class TestGetJson(unittest.TestCase):
+    """Test cases for get_json function."""
+    
+    @patch('requests.get')
+    def test_get_json(self, mock_get):
+        """Test get_json with a mock response."""
+        
+        @parameterized.expand([
+            ("http://example.com", {"payload": True}),
+            ("http://holberton.io", {"payload": False})
+        ])
+
+        
+        def test_get_json(self, test_url, test_payload, mock_get):
+            """Test get_json with a mock response."""
+            mock_response = Mock()
+            mock_response.json.return_value = test_payload
+            mock_get.return_value = mock_response
+
+            result = get_json(test_url)
+            self.assertEqual(result, test_payload)
+            mock_get.assert_called_once_with(test_url)
