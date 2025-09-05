@@ -104,12 +104,22 @@ class TestAccessNestedMap(unittest.TestCase):
         ({"a": 1}, ("a",), 1),
         ({"a": {"b": 2}}, ("a",), {"b": 2}),
         ({"a": {"b": 2}}, ("a", "b"), 2),
-        ({"a": {"b": {"c": 3}}}, ("a", "b", "c"), 3)
+        ({"a": {"b": {"c": 3}}}, ("a", "b", "c"), 3),
+        ({}, ("a",), KeyError),
+        ({"a":1}, ("a", "b"), KeyError)
     ])
+
     def test_access_nested_map(self, nested_map: Mapping, path: Sequence, expected: Any):
         """Test access_nested_map with various inputs."""
-        result = access_nested_map(nested_map, path)
-        self.assertEqual(result, expected)
+
+        if isinstance(expected, type) and issubclass(expected, Exception):
+            with self.assertRaises(expected):
+                access_nested_map(nested_map, path)
+            
+        else:        
+            result = access_nested_map(nested_map, path)
+            self.assertEqual(result, expected)
+               
 
 if __name__ == "__main__":
     unittest.main() 
