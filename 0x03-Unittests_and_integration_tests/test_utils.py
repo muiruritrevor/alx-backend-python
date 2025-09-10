@@ -79,6 +79,12 @@ def get_json(url: str) -> dict:
 # print(access_nested_map(nested_map, ["a", "b", "c"]))
 
 
+
+
+# Task 0. Write the first unit tests to test access_nested_map.
+# Task1. Use parameterized to test the function with multiple inputs
+
+
 from parameterized import parameterized
 import unittest
 from typing import (
@@ -121,8 +127,8 @@ class TestAccessNestedMap(unittest.TestCase):
             self.assertEqual(result, expected)
                
 
-if __name__ == "__main__":
-    unittest.main() 
+# if __name__ == "__main__":
+#     unittest.main() 
 
 
 
@@ -153,3 +159,51 @@ class TestGetJson(unittest.TestCase):
             result = get_json(test_url)
             self.assertEqual(result, test_payload)
             mock_get.assert_called_once_with(test_url)
+
+
+# if __name__ == "__main__":
+#     unittest.main()
+
+
+# task 3. Implement memoization and write unittests for it.
+from functools import wraps
+from typing import Callable
+def memoize(fn: Callable) -> Callable:
+
+    attr_name = "_{}".format(fn.__name__)
+    @wraps(fn)
+    def wrapper(self):
+        """memoized wraps"""
+        if not hasattr(self, attr_name):
+            setattr(self, attr_name, fn(self))
+        return getattr(self, attr_name)
+
+    return property(wrapper)
+
+
+class TestMemoize(unittest.TestCase):
+    def test_memoize(self):
+        class TestClass:
+            def a_method(self):
+                return 42
+            
+            @memoize
+            def a_property(self):
+                return self.a_method()
+            
+
+        test_instance = TestClass()
+
+        with patch.object(test_instance, 'a_method', return_value=42) as mock_method:
+            result1 = test_instance.a_property
+            result2 = test_instance.a_property
+
+            self.assertEqual(result1, 42)
+            self.assertEqual(result2, 42)
+            mock_method.assert_called_once()
+
+
+
+
+if __name__ == "__main__":
+    unittest.main()
