@@ -62,9 +62,7 @@ class GithubOrgClient:
     
 
 
-
-        
-
+# Test 4. GithuborgClient.org method
 import unittest
 from unittest.mock import patch
 from parameterized import parameterized
@@ -97,6 +95,25 @@ class TestGithubOrgClient(unittest.TestCase):
         mock_get_json.assert_called_once_with(
             f"https://api.github.com/orgs/{org_name}"
         )
+
+    # Test 5. Test _public_repos_url property
+
+    def test_public_repos_url(self):
+        """Test _public_repos_url property"""
+        
+        test_payload = {
+            "login": "google", 
+            "repos_url": "https://api.github.com/orgs/google/repos"
+            }
+        with patch('test_client.get_json', return_value=test_payload):
+            client = GithubOrgClient("google")
+            self.assertEqual(
+                client._public_repos_url,
+                "https://api.github.com/orgs/google/repos"
+            )
+
+
+
 
 if __name__ == "__main__":
     unittest.main()       
