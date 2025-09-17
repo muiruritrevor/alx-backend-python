@@ -44,3 +44,15 @@ async def fetch_concurrently():
 asyncio.run(fetch_concurrently()) 
 
 
+
+import asyncio
+async def insert_users():
+    async with aiosqlite.connect('users.db') as db:
+        cursor = await db.execute(
+            """
+            INSERT INTO users(name, age) VALUES ("Jong", 70,)
+            """
+        )
+        await db.commit()
+        return cursor
+    

@@ -41,7 +41,8 @@ import requests
 
 
 def get_json(url: str) -> dict:
-    """Get JSON from remote URL.
+    """]
+    Get JSON from remote URL.
     """
     response = requests.get(url)
     return response.json()
@@ -182,7 +183,9 @@ def memoize(fn: Callable) -> Callable:
 
 
 class TestMemoize(unittest.TestCase):
+    """Test cases for memoize decorator."""
     def test_memoize(self):
+        """Test memoize decorator."""
         class TestClass:
             def a_method(self):
                 return 42
@@ -201,8 +204,6 @@ class TestMemoize(unittest.TestCase):
             self.assertEqual(result1, 42)
             self.assertEqual(result2, 42)
             mock_method.assert_called_once()
-
-
 
 
 if __name__ == "__main__":

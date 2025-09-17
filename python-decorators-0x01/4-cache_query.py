@@ -29,20 +29,22 @@ def cache_query(func):
     def wrapper(*args, **kwargs):
         # Create a unique key for the cache based on function name and arguments
         key = (func.__name__, args, frozenset(kwargs.items()))
+        # ?args[0] if args else kwargs.get('query')
         if key in query_cache:
             print("Returning cached result.")
             return query_cache[key]
+            
         
         print("Executing query and caching result.")
         result = func(*args, **kwargs)
-        # query_cache[key] = result
+        query_cache[key] = result
         return result
     
     return wrapper
 
 
-@with_db_connection
 @cache_query
+@with_db_connection
 def fetch_users_with_cache(conn, query):
     cursor = conn.cursor()
     cursor.execute(query)

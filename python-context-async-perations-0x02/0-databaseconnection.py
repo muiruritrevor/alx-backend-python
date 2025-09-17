@@ -2,7 +2,8 @@ import sqlite3
 
 
 class DatabaseConnection:
-    """A class to manage database connections.
+    """
+    A class custom context manager to manage database connections.
     This class provides methods to connect to and close a database connection.
     """
     def __init__(self):
