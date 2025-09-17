@@ -14,20 +14,19 @@ from mysql.connector import Error
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
 # Database configuration
 DB_CONFIG = {
-    'host': 'localhost',
-    'user': os.environ.get("DB_USER"),
-    'password': os.environ.get("DB_PASS")
+    "host": "localhost",
+    "user": os.environ.get("DB_USER"),
+    "password": os.environ.get("DB_PASS"),
 }
 
 # CSV file path
-csv_file = 'user_data.csv'
+csv_file = "user_data.csv"
 
 
 def connect_to_mysql():
@@ -134,20 +133,20 @@ def insert_data(connection, data):
     """
     cursor = None
     try:
-        with open(data, 'r', encoding='utf-8') as file:
+        with open(data, "r", encoding="utf-8") as file:
             reader = csv.DictReader(file)
             cursor = connection.cursor()
             inserted = 0
 
             for row in reader:
                 user_id = str(uuid4())
-                name = row['name']
-                email = row['email']
-                age = int(row['age'])
+                name = row["name"]
+                email = row["email"]
+                age = int(row["age"])
 
                 cursor.execute(
                     "INSERT IGNORE INTO user_data (user_id, name, email, age) VALUES (%s, %s, %s, %s)",
-                    (user_id, name, email, age)
+                    (user_id, name, email, age),
                 )
                 if cursor.rowcount:
                     inserted += 1

@@ -1,5 +1,5 @@
-#seed = __import__('seed')
-import seed 
+# seed = __import__('seed')
+import seed
 
 connection = seed.connect_to_db()
 if connection:
@@ -11,9 +11,11 @@ if connection:
 
     if connection:
         seed.create_table(connection)
-        seed.insert_data(connection, 'user_data.csv')
+        seed.insert_data(connection, "user_data.csv")
         cursor = connection.cursor(buffered=True)
-        cursor.execute(f"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'ALX_prodev';")
+        cursor.execute(
+            f"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'ALX_prodev';"
+        )
         result = cursor.fetchone()
         if result:
             print(f"Database ALX_prodev is present ")

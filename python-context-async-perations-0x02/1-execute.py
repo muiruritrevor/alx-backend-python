@@ -1,7 +1,9 @@
 import sqlite3
 
+
 class ExecuteQuery:
     """A reusable context manager to execute SQL queries and manage database connections."""
+
     def __init__(self, query, params=None):
         self.query = query
         self.params = params if params is not None else ()
@@ -9,7 +11,7 @@ class ExecuteQuery:
         self.result = None
 
     def __enter__(self):
-        self.connection = sqlite3.connect('users.db')
+        self.connection = sqlite3.connect("users.db")
         cursor = self.connection.cursor()
         cursor.execute(self.query, self.params)
         self.result = cursor.fetchall()

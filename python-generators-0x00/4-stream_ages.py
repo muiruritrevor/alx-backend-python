@@ -4,8 +4,7 @@ import logging
 
 # Configure logging to display time, log level, and message
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
 logger = logging.getLogger(__name__)
@@ -23,7 +22,7 @@ def stream_user_ages():
         cursor.execute(query)
         rows = cursor.fetchall()
         for row in rows:
-            yield row['age']
+            yield row["age"]
 
     except Error as e:
         logger.error(f"Error fetching rows: {e}")
@@ -50,5 +49,5 @@ def avg_age():
         print("No users found to calculate average age.")
 
 
-if __name__=="__main__" :
+if __name__ == "__main__":
     avg_age()

@@ -4,8 +4,7 @@ import logging
 
 # Configure logging to display time, log level, and message
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
 logger = logging.getLogger(__name__)
@@ -14,11 +13,11 @@ logger = logging.getLogger(__name__)
 def paginate_users(page_size, offset):
     """
     Fetch a single page of users from the database.
-    
+
     Args:
         page_size (int): Number of users per page.
         offset (int): Offset to start retrieving records from.
-    
+
     Returns:
         list[dict]: List of user records.
     """

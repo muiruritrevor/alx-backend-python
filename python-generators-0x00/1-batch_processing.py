@@ -4,18 +4,19 @@ import logging
 
 # Configure logging to display time, log level, and message
 logging.basicConfig(
-    level=logging.INFO, 
-    format='%(asctime)s - %(levelname)s - %(message)s')
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 logger = logging.getLogger(__name__)
+
 
 def stream_users_in_batches(batch_size: int):
     """
     Generator that streams user records from the 'user_data' table in batches.
-    
+
     Args:
         batch_size (int): Number of records to retrieve per batch.
-        
+
     Yields:
         list[dict]: A batch of user records as dictionaries.
     """
@@ -53,7 +54,7 @@ def stream_users_in_batches(batch_size: int):
 def batch_processing(batch_size: int):
     """
     Processes batches of user data and prints users over the age of 25.
-    
+
     Args:
         batch_size (int): Number of records to process per batch.
     """

@@ -2,6 +2,7 @@
 # """Generic utilities for github org client.
 # """
 import requests
+
 # from functools import wraps
 # from typing import (
 #     Mapping,
@@ -80,8 +81,6 @@ def get_json(url: str) -> dict:
 # print(access_nested_map(nested_map, ["a", "b", "c"]))
 
 
-
-
 # Task 0. Write the first unit tests to test access_nested_map.
 # Task1. Use parameterized to test the function with multiple inputs
 
@@ -93,6 +92,7 @@ from typing import (
     Sequence,
     Any,
 )
+
 
 def access_nested_map(nested_map: Mapping, path: Sequence) -> Any:
 
@@ -106,31 +106,33 @@ def access_nested_map(nested_map: Mapping, path: Sequence) -> Any:
 
 class TestAccessNestedMap(unittest.TestCase):
     """Test cases for access_nested_map function."""
-    
-    @parameterized.expand([
-        ({"a": 1}, ("a",), 1),
-        ({"a": {"b": 2}}, ("a",), {"b": 2}),
-        ({"a": {"b": 2}}, ("a", "b"), 2),
-        ({"a": {"b": {"c": 3}}}, ("a", "b", "c"), 3),
-        ({}, ("a",), KeyError),
-        ({"a":1}, ("a", "b"), KeyError)
-    ])
 
-    def test_access_nested_map(self, nested_map: Mapping, path: Sequence, expected: Any):
+    @parameterized.expand(
+        [
+            ({"a": 1}, ("a",), 1),
+            ({"a": {"b": 2}}, ("a",), {"b": 2}),
+            ({"a": {"b": 2}}, ("a", "b"), 2),
+            ({"a": {"b": {"c": 3}}}, ("a", "b", "c"), 3),
+            ({}, ("a",), KeyError),
+            ({"a": 1}, ("a", "b"), KeyError),
+        ]
+    )
+    def test_access_nested_map(
+        self, nested_map: Mapping, path: Sequence, expected: Any
+    ):
         """Test access_nested_map with various inputs."""
 
         if isinstance(expected, type) and issubclass(expected, Exception):
             with self.assertRaises(expected):
                 access_nested_map(nested_map, path)
-            
-        else:        
+
+        else:
             result = access_nested_map(nested_map, path)
             self.assertEqual(result, expected)
-               
+
 
 # if __name__ == "__main__":
-#     unittest.main() 
-
+#     unittest.main()
 
 
 # Test 2. Mock HTTP calls
@@ -138,19 +140,20 @@ class TestAccessNestedMap(unittest.TestCase):
 
 from unittest.mock import patch, Mock
 
+
 class TestGetJson(unittest.TestCase):
     """Test cases for get_json function."""
-    
-    @patch('requests.get')
+
+    @patch("requests.get")
     def test_get_json(self, mock_get):
         """Test get_json with a mock response."""
-        
-        @parameterized.expand([
-            ("http://example.com", {"payload": True}),
-            ("http://holberton.io", {"payload": False})
-        ])
 
-        
+        @parameterized.expand(
+            [
+                ("http://example.com", {"payload": True}),
+                ("http://holberton.io", {"payload": False}),
+            ]
+        )
         def test_get_json(self, test_url, test_payload, mock_get):
             """Test get_json with a mock response."""
             mock_response = Mock()
@@ -169,9 +172,12 @@ class TestGetJson(unittest.TestCase):
 # task 3. Implement memoization and write unittests for it.
 from functools import wraps
 from typing import Callable
+
+
 def memoize(fn: Callable) -> Callable:
 
     attr_name = "_{}".format(fn.__name__)
+
     @wraps(fn)
     def wrapper(self):
         """memoized wraps"""
@@ -184,20 +190,21 @@ def memoize(fn: Callable) -> Callable:
 
 class TestMemoize(unittest.TestCase):
     """Test cases for memoize decorator."""
+
     def test_memoize(self):
         """Test memoize decorator."""
+
         class TestClass:
             def a_method(self):
                 return 42
-            
+
             @memoize
             def a_property(self):
                 return self.a_method()
-            
 
         test_instance = TestClass()
 
-        with patch.object(test_instance, 'a_method', return_value=42) as mock_method:
+        with patch.object(test_instance, "a_method", return_value=42) as mock_method:
             result1 = test_instance.a_property
             result2 = test_instance.a_property
 
