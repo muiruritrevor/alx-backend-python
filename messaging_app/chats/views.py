@@ -9,10 +9,9 @@ class ConversationViewSet(viewsets.ModelViewSet):
     serializer_class = ConversationSerializer
     # permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['created_at']  # Example: filter by creation date
+    filterset_fields = ['created_at']
 
     def get_queryset(self):
-        # Only show conversations where the user is a participant
         return Conversation.objects.filter(participants=self.request.user).prefetch_related('participants')
 
     def create(self, request, *args, **kwargs):
@@ -25,16 +24,20 @@ class ConversationViewSet(viewsets.ModelViewSet):
             status=status.HTTP_201_CREATED,
             headers=headers
         )
+    
 
 class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
     # permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['sent_at', 'conversation']  # Filter by time or convo
+    filterset_fields = ['timestamp']  # No need for 'conversation' filter since it's in the URL
 
     def get_queryset(self):
-        # Only show messages in conversations the user is part of
+        # Get conversation_id from URL (passed by NestedDefaultRouter)
+        conversation_id = self.kwargs.get('conversation')
+        # Filter messages by conversation and ensure user is a participant
         return Message.objects.filter(
+            conversation_id=conversation_id,
             conversation__participants=self.request.user
         ).select_related('sender', 'conversation')
 
