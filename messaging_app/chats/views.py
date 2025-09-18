@@ -1,27 +1,48 @@
-from django.shortcuts import render
-from rest_framework import viewsets
+from rest_framework import viewsets, status
+# from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
 from .models import Conversation, Message
 from .serializers import ConversationSerializer, MessageSerializer
 
-
-# Create your views here.
-
 class ConversationViewSet(viewsets.ModelViewSet):
-    queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
+    # permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['created_at']  # Example: filter by creation date
+
+    def get_queryset(self):
+        # Only show conversations where the user is a participant
+        return Conversation.objects.filter(participants=self.request.user).prefetch_related('participants')
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        conversation = serializer.save()
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            {"status": "success", "data": serializer.data},
+            status=status.HTTP_201_CREATED,
+            headers=headers
+        )
 
 class MessageViewSet(viewsets.ModelViewSet):
-    queryset = Message.objects.all()
     serializer_class = MessageSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['sent_at', 'conversation']  # Filter by time or convo
 
-    def perform_create(self, serializer):
-        serializer.save(sender=self.request.user)
+    def get_queryset(self):
+        # Only show messages in conversations the user is part of
+        return Message.objects.filter(
+            conversation__participants=self.request.user
+        ).select_related('sender', 'conversation')
 
-    # def get_queryset(self):
-    #     user = self.request.user
-    #     return Message.objects.filter(conversation__participants=user)
-    
-
-
-
-
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        message = serializer.save()
+        return Response(
+            {"status": "success", "data": serializer.data},
+            status=status.HTTP_201_CREATED
+        )
