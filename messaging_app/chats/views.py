@@ -18,7 +18,7 @@ class ConversationViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        conversation = serializer.save()
+        serializer.save()
         headers = self.get_success_headers(serializer.data)
         return Response(
             {"status": "success", "data": serializer.data},
@@ -28,7 +28,7 @@ class ConversationViewSet(viewsets.ModelViewSet):
 
 class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['sent_at', 'conversation']  # Filter by time or convo
 
@@ -41,7 +41,7 @@ class MessageViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        message = serializer.save()
+        serializer.save()
         return Response(
             {"status": "success", "data": serializer.data},
             status=status.HTTP_201_CREATED
