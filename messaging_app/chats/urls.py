@@ -5,11 +5,11 @@ from .views import ConversationViewSet, MessageViewSet
 
 # Base router for top-level resources
 router = DefaultRouter()
-router.register(r'conversations', ConversationViewSet, basename='conversation')
+router.register('conversation', ConversationViewSet, basename='conversation')
 
 # Nested router for messages under conversations
-conversations_router = NestedDefaultRouter(router, r'conversations', lookup='conversation')
-conversations_router.register(r'messages', MessageViewSet, basename='conversation-message')
+conversations_router = NestedDefaultRouter(router, 'conversation', lookup='conversation')
+conversations_router.register('message', MessageViewSet, basename='conversation-message')
 
 urlpatterns = [
     path('', include(router.urls)),
